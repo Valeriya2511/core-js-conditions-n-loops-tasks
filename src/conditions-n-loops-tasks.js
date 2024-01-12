@@ -479,7 +479,7 @@ function sortByAsc(arr) {
     const curr = newArr[i];
     let ind = i - 1;
 
-    while (ind >= 0 && newArr[ind] > curr) {
+    while (newArr[ind] > curr && ind >= 0) {
       newArr[ind + 1] = newArr[ind];
       ind -= 1;
     }
