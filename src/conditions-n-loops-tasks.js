@@ -472,8 +472,23 @@ function rotateMatrix(matrix) {
  *  [2, 9, 5, 9]    => [2, 5, 9, 9]
  *  [-2, 9, 5, -3]  => [-3, -2, 5, 9]
  */
-function sortByAsc(/* arr */) {
-  throw new Error('Not implemented');
+function sortByAsc(arr) {
+  const newArr = [...arr];
+  let n = arr.length;
+  let swapped;
+
+  do {
+    swapped = false;
+    for (let i = 0; i < n - 1; i += 1) {
+      if (newArr[i] > newArr[i + 1]) {
+        const temp = arr[i];
+        newArr[i] = newArr[i + 1];
+        newArr[i + 1] = temp;
+        swapped = true;
+      }
+    }
+    n -= 1;
+  } while (swapped);
 }
 
 /**
@@ -493,8 +508,24 @@ function sortByAsc(/* arr */) {
  *  '012345', 3 => '024135' => '043215' => '031425'
  *  'qwerty', 3 => 'qetwry' => 'qtrewy' => 'qrwtey'
  */
-function shuffleChar(/* str, iterations */) {
-  throw new Error('Not implemented');
+function shuffleChar(str, iterations) {
+  let newStr = str;
+
+  let step = iterations % (str.length - 2);
+
+  if (iterations > 100) {
+    step *= 5;
+  }
+
+  for (let x = 0; x < step; x += 1) {
+    for (let y = 1; y < newStr.length / 2 + 1; y += 1) {
+      const i = newStr[y];
+      newStr = newStr.substring(0, y) + newStr.substring(y + 1, str.length);
+      newStr += i;
+    }
+  }
+
+  return newStr;
 }
 
 /**
@@ -514,8 +545,44 @@ function shuffleChar(/* str, iterations */) {
  * @param {number} number The source number
  * @returns {number} The nearest larger number, or original number if none exists.
  */
-function getNearestBigger(/* number */) {
-  throw new Error('Not implemented');
+function getNearestBigger(number) {
+  const digits = Array.from(String(number), Number);
+
+  let pivotIndex = -1;
+  for (let i = digits.length - 2; i >= 0; i -= 1) {
+    if (digits[i] < digits[i + 1]) {
+      pivotIndex = i;
+      break;
+    }
+  }
+
+  if (pivotIndex === -1) {
+    return number;
+  }
+
+  let smallestLargerIndex = -1;
+  for (let i = digits.length - 1; i > pivotIndex; i -= 1) {
+    if (digits[i] > digits[pivotIndex]) {
+      if (
+        smallestLargerIndex === -1 ||
+        digits[i] < digits[smallestLargerIndex]
+      ) {
+        smallestLargerIndex = i;
+      }
+    }
+  }
+
+  [digits[pivotIndex], digits[smallestLargerIndex]] = [
+    digits[smallestLargerIndex],
+    digits[pivotIndex],
+  ];
+
+  const sortedDigits = digits.splice(pivotIndex + 1).sort((a, b) => a - b);
+  digits.push(sortedDigits);
+
+  const result = parseInt(digits.flat().join(''), 10);
+
+  return result;
 }
 
 module.exports = {
