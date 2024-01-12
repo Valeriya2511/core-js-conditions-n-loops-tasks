@@ -339,28 +339,22 @@ function isContainNumber(num, digit) {
  *  [1, 2, 3, 4, 5] => -1   => no balance element
  */
 function getBalanceIndex(arr) {
-  let left = 0;
-  let right = 0;
-
-  if (arr.length < 3) return -1;
-
-  for (let i = 1; i < arr.length - 1; i += 1) {
-    for (let y = 0; y < arr.length; y += 1) {
-      if (y < i) {
-        left += arr[y];
-      }
-      if (y > i) {
-        right += arr[y];
-      }
+  for (let i = 0; i < arr.length; i += 1) {
+    let leftSum = 0;
+    let rightSum = 0;
+    for (let j = 0; j < i; j += 1) {
+      leftSum += arr[j];
     }
-    if (left === right) {
+    for (let k = i + 1; k < arr.length; k += 1) {
+      rightSum += arr[k];
+    }
+
+    if (leftSum === rightSum) {
       return i;
     }
   }
-
   return -1;
 }
-
 /**
  * Generates a spiral matrix of a given size, filled with numbers in ascending order starting from one.
  * The direction of filling with numbers is clockwise.
@@ -382,8 +376,45 @@ function getBalanceIndex(arr) {
  *          [10, 9,  8,  7]
  *        ]
  */
-function getSpiralMatrix(/* size */) {
-  throw new Error('Not implemented');
+function getSpiralMatrix(size) {
+  const matrix = [];
+  for (let i = 0; i < size; i += 1) {
+    matrix[i] = new Array(size);
+  }
+
+  let counter = 1;
+  let startRow = 0;
+  let startCol = 0;
+  let endRow = size - 1;
+  let endCol = size - 1;
+
+  while (startRow <= endRow && startCol <= endCol) {
+    for (let col = startCol; col <= endCol; col += 1) {
+      matrix[startRow][col] = counter;
+      counter += 1;
+    }
+    startRow += 1;
+
+    for (let row = startRow; row <= endRow; row += 1) {
+      matrix[row][endCol] = counter;
+      counter += 1;
+    }
+    endCol -= 1;
+
+    for (let col = endCol; col >= startCol; col -= 1) {
+      matrix[endRow][col] = counter;
+      counter += 1;
+    }
+    endRow -= 1;
+
+    for (let row = endRow; row >= startRow; row -= 1) {
+      matrix[row][startCol] = counter;
+      counter += 1;
+    }
+    startCol += 1;
+  }
+
+  return matrix;
 }
 
 /**
@@ -401,8 +432,30 @@ function getSpiralMatrix(/* size */) {
  *    [7, 8, 9]         [9, 6, 3]
  *  ]                 ]
  */
-function rotateMatrix(/* matrix */) {
-  throw new Error('Not implemented');
+function rotateMatrix(matrix) {
+  const newMatrix = [...matrix];
+  const n = newMatrix.length;
+
+  for (let i = 0; i < n; i += 1) {
+    for (let j = i; j < n; j += 1) {
+      const temp = newMatrix[i][j];
+      newMatrix[i][j] = newMatrix[j][i];
+      newMatrix[j][i] = temp;
+    }
+  }
+
+  for (let i = 0; i < n; i += 1) {
+    let start = 0;
+    let end = n - 1;
+    while (start < end) {
+      const temp = newMatrix[i][start];
+      newMatrix[i][start] = newMatrix[i][end];
+      newMatrix[i][end] = temp;
+      start += 1;
+      end -= 1;
+    }
+  }
+  return newMatrix;
 }
 
 /**
